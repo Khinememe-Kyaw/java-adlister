@@ -2,7 +2,10 @@ package com.codeup.adlister.dao;
 
 import com.codeup.adlister.models.Ad;
 import com.mysql.cj.jdbc.Driver;
+import com.java.Config;
 
+
+import javax.servlet.jsp.jstl.core.Config;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,21 +31,26 @@ public class MySQLAdsDao implements Ads {
 
     @Override
     public List<Ad> all() {
-        Statement stmt = null;
-        try {
-            stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM ads");
-            return createAdsFromResults(rs);
+        List<Ad> ads = new ArrayList<>();
+        String query = "SELECT * FROM ads";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ads.add(extractAd(rs));
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Error retrieving all ads.", e);
         }
+        return ads;
     }
+
+
 
     @Override
     public Long insert(Ad ad) {
         try {
-            Statement stmt = connection.createStatement();
-            stmt.executeUpdate(createInsertQuery(ad), Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = createInsertStatement(ad);
+            stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
             rs.next();
             return rs.getLong(1);
@@ -50,6 +58,7 @@ public class MySQLAdsDao implements Ads {
             throw new RuntimeException("Error creating a new ad.", e);
         }
     }
+
 
     private String createInsertQuery(Ad ad) {
         return "INSERT INTO ads(user_id, title, description) VALUES "
@@ -74,4 +83,15 @@ public class MySQLAdsDao implements Ads {
         }
         return ads;
     }
+
+    private PreparedStatement createInsertStatement(Ad ad) throws SQLException {
+        String query = "INSERT INTO ads(user_id, title, description) VALUES (?, ?, ?)";
+        PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        stmt.setLong(1, ad.getUserId());
+        stmt.setString(2, ad.getTitle());
+        stmt.setString(3, ad.getDescription());
+        return stmt;
+    }
+
+
 }

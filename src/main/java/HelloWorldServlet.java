@@ -4,17 +4,19 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-@WebServlet(name = "HelloWorldServelt", urlPatterns = "/hello")
+
+@WebServlet(name ="HelloWorldServlet", urlPatterns="/hello")
 public class HelloWorldServlet extends HttpServlet{
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
-        res.setContentType("text/html");
-        PrintWriter out = res.getWriter();
-        String name = req.getParameter("name");
-        if(name == null){
-            out.println("<h>Hello World!</h>");
+    public void doGet(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        String name = request.getParameter("name");
+        if(name== null){
+            out.println("Hello World!");
         }else{
-            out.println("<h>Hello, " + name + "!</h>");
+            out.println("Hello " + name + " !");
         }
     }
 }

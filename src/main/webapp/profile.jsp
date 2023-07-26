@@ -13,6 +13,5 @@
 </head>
 <body>
 <h1>Welcome to your profile!</h1>
-<!-- Add the content for the user's profile here -->
 </body>
 </html>

@@ -7,6 +7,7 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,4 +22,7 @@
     <h1>Portfolio Website</h1>
 </body>
 </html>
-
+<%@ include file="aboutMe.jsp"%>
+<%@ include file="nav.jsp"%>
+<%@ include file="skills.jsp"%>
+<%@ include file="contact.jsp"%>

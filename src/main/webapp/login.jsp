@@ -12,18 +12,25 @@
     <title>Login Page</title>
 </head>
 <body>
-<c:if test='${pageContext.request.method.equalsIgnoreCase("POST")}'>
-    <c:if test="${param.username == 'admin' && param.password == 'password'}">
+<c:choose>
+<c:when test='${pageContext.request.method.equalsIgnoreCase("POST")}'>
+    <c:choose>
+    <c:when test="${param.username == 'admin' && param.password == 'password'}">
       <% response.sendRedirect("/profile.jsp"); %>
-        c:else <p >Invalid username or password. Please try again.</p>
-    </c:if>
-</c:if>
+    </c:when>
+    <c:otherwise>
+        <p >Invalid username or password. Please try again.</p>
+    </c:otherwise>
+    </c:choose>
+</c:when>
+</c:choose>
 <form action="login.jsp" method="POST">
     <label for="username">Username:</label>
     <input type="text" name="username" id="username">
-    <br/>
+    <br/><br/>
     <label for="password">Password:</label>
     <input type="password" name="password" id="password">
+    <br/><br/>
     <input type="submit">
 </form>
 </body>

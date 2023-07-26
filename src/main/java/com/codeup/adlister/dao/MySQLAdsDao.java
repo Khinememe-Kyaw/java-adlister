@@ -2,13 +2,8 @@ package com.codeup.adlister.dao;
 
 import com.codeup.adlister.models.Ad;
 import com.mysql.cj.jdbc.Driver;
-import com.java.Config;
-
 
 import javax.servlet.jsp.jstl.core.Config;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +44,11 @@ public class MySQLAdsDao implements Ads {
     @Override
     public Long insert(Ad ad) {
         try {
-            PreparedStatement stmt = createInsertStatement(ad);
+            String query = "INSERT INTO ads (user_id, title, description) VALUES (?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            stmt.setLong(1, ad.getUserId());
+            stmt.setString(2, ad.getTitle());
+            stmt.setString(3, ad.getDescription());
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
             rs.next();
@@ -58,6 +57,7 @@ public class MySQLAdsDao implements Ads {
             throw new RuntimeException("Error creating a new ad.", e);
         }
     }
+
 
 
     private String createInsertQuery(Ad ad) {
@@ -69,10 +69,10 @@ public class MySQLAdsDao implements Ads {
 
     private Ad extractAd(ResultSet rs) throws SQLException {
         return new Ad(
-            rs.getLong("id"),
-            rs.getLong("user_id"),
-            rs.getString("title"),
-            rs.getString("description")
+                rs.getLong("id"),
+                rs.getLong("user_id"),
+                rs.getString("title"),
+                rs.getString("description")
         );
     }
 
@@ -83,15 +83,5 @@ public class MySQLAdsDao implements Ads {
         }
         return ads;
     }
-
-    private PreparedStatement createInsertStatement(Ad ad) throws SQLException {
-        String query = "INSERT INTO ads(user_id, title, description) VALUES (?, ?, ?)";
-        PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-        stmt.setLong(1, ad.getUserId());
-        stmt.setString(2, ad.getTitle());
-        stmt.setString(3, ad.getDescription());
-        return stmt;
-    }
-
 
 }

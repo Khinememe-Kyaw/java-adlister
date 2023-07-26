@@ -23,8 +23,6 @@ public class PizzaServlet extends HttpServlet {
     }
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
         request.getRequestDispatcher("/pizza.jsp").forward(request, response);
         String crust = request.getParameter("crust");
         String sauce = request.getParameter("sauce");
@@ -33,6 +31,6 @@ public class PizzaServlet extends HttpServlet {
         String address = request.getParameter("address");
 
         System.out.println(String.format("Deliver to: %s.%n%s size.%n%s pizza.%n%s sauce.%nTopped with %s.%n", address, size, crust, sauce, Arrays.toString(toppings)));
-        out.println("Size is " +size);
+
     }
 }
